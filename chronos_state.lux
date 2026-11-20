@@ -1,4 +1,4 @@
-// chronos_state.lux — Updated Chronos Engine (Pythagorean + Metric + Macro Arcs)
+// chronos_state.lux — Live Pythagorean & Metric Chronos Engine
 
 class PlanetInfo {
   init(name, root, archangel, spirit) {
@@ -28,26 +28,21 @@ class Chronos {
     return fraction * 100.0;
   }
 
-  formattedMetric() {
-    var raw = (this.centidays() * 100) / 100.0;
-    return "" + raw + " LMT";
-  }
-
-  // 2. Macro Cycles (10-day Dekade, 100-day Arc, 365-day Solar Arc)
+  // 2. Macro Cycles (10-day Dekade, 20-day Sprint, 100-day Arc, 365-day Solar Arc)
   dekadeDay() {
-    return (this.personalDays % 10) + 1; // 1 to 10
+    return (this.personalDays % 10) + 1;
   }
 
   twentyDaySprint() {
-    return (this.personalDays % 20) + 1; // 1 to 20 (two 10-day dekades)
+    return (this.personalDays % 20) + 1;
   }
 
   hundredDayArc() {
-    return (this.personalDays % 100) + 1; // 1 to 100
+    return (this.personalDays % 100) + 1;
   }
 
   solarYearArc() {
-    return (this.personalDays % 365) + 1; // 1 to 365 (e.g., anchored to May 18)
+    return (this.personalDays % 365) + 1;
   }
 
   // 3. Pythagorean Planetary Lookup
@@ -64,17 +59,8 @@ class Chronos {
 
   // Day Planet (locked to Unix Epoch Thursday = 0)
   dayPlanet() {
-    var weekOrder = [
-      "Jupiter", // 0: Thursday
-      "Venus",   // 1: Friday
-      "Saturn",  // 2: Saturday
-      "Sun",     // 3: Sunday
-      "Moon",    // 4: Monday
-      "Mars",    // 5: Tuesday
-      "Mercury"  // 6: Wednesday
-    ];
-    var name = weekOrder[this.unixDays % 7];
-    return this.planetDetails(name);
+    var weekOrder = ["Jupiter", "Venus", "Saturn", "Sun", "Moon", "Mars", "Mercury"];
+    return this.planetDetails(weekOrder[this.unixDays % 7]);
   }
 
   // Chaldean Planetary Hour (anchored to 06:00 sunrise; 00:00–05:59 belongs to prior planetary day)
@@ -88,7 +74,6 @@ class Chronos {
       hoursSinceSunrise = hoursSinceSunrise + 24;
     }
 
-    // Thursday (effectiveDays % 7 == 0) starts on Jupiter (index 1), advancing +3 per weekday
     var dayStartOffset = ((effectiveDays % 7) * 3) + 1;
     var index = (dayStartOffset + hoursSinceSunrise) % 7;
     return this.planetDetails(chaldean[index]);
@@ -99,8 +84,9 @@ class Chronos {
     var dPlanet = this.dayPlanet();
     var hPlanet = this.planetaryHour();
     var out = "---\n";
-    out = out + "metric_time: " + this.formattedMetric() + "\n";
+    out = out + "metric_time: " + this.centidays() + " LMT\n";
     out = out + "dekade_day: " + this.dekadeDay() + "\n";
+    out = out + "twenty_sprint: " + this.twentyDaySprint() + "\n";
     out = out + "hundred_arc: " + this.hundredDayArc() + "\n";
     out = out + "solar_arc: " + this.solarYearArc() + "\n";
     out = out + "day_planet: " + dPlanet.name + "\n";
@@ -112,18 +98,29 @@ class Chronos {
   }
 }
 
-// --- Test Run: Tuesday, Nov 17, 2026 @ 00:31:00 CST ---
-// Unix days for Nov 17, 2026 = 20774
-// Anchor Unix days for May 18, 2026 = 20591 (Solar Year Arc = Day 184 of 365)
-var chronos = Chronos(0, 31, 0, 20774, 20591);
+fun nowChronos(anchorDateStr) {
+  var cmd = "sh -c '";
+  cmd = cmd + "h=$(date +%-H); m=$(date +%-M); s=$(date +%-S); ";
+  cmd = cmd + "off=$(date +%z | awk \"{print substr(\\$0,1,1)(substr(\\$0,2,2)*3600 + substr(\\$0,4,2)*60)}\"); ";
+  cmd = cmd + "now_days=$(( ($(date +%s) + off) / 86400 )); ";
+  cmd = cmd + "anc_sec=$(date -j -f \"%Y-%m-%d %H:%M:%S\" \"" + anchorDateStr + " 00:00:00\" +%s); ";
+  cmd = cmd + "anc_days=$(( (anc_sec + off) / 86400 )); ";
+  cmd = cmd + "echo \"{\\\"h\\\":$h,\\\"m\\\":$m,\\\"s\\\":$s,\\\"days\\\":$now_days,\\\"anchor\\\":$anc_days}\"";
+  cmd = cmd + "'";
 
-print "Metric Time:   " + chronos.formattedMetric();
-print "Dekade Day:    " + chronos.dekadeDay() + " / 10";
-print "twentyDaySprint: " + chronos.twentyDaySprint();
-print "100-Day Arc:   " + chronos.hundredDayArc() + " / 100";
-print "Solar Arc:     " + chronos.solarYearArc() + " / 365";
-print "Day Ruler:     " + chronos.dayPlanet().label();
-print "Hour Ruler:    " + chronos.planetaryHour().label();
+  var d = parseJSON(run(cmd));
+  return Chronos(d.h, d.m, d.s, d.days, d.anchor);
+}
+
+var chronos = nowChronos("2026-05-18");
+
+print "Metric Time:    " + chronos.centidays() + " LMT";
+print "Dekade Day:     " + chronos.dekadeDay() + " / 10";
+print "20-Day Sprint:  " + chronos.twentyDaySprint() + " / 20";
+print "100-Day Arc:    " + chronos.hundredDayArc() + " / 100";
+print "Solar Arc:      " + chronos.solarYearArc() + " / 365";
+print "Day Ruler:      " + chronos.dayPlanet().label();
+print "Hour Ruler:     " + chronos.planetaryHour().label();
 print "\n--- Obsidian Frontmatter ---";
 print chronos.toObsidianHeader();
 
