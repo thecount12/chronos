@@ -98,21 +98,37 @@ class Chronos {
   }
 }
 
-fun nowChronos(anchorDateStr) {
+fun nowChronos(anchorUnixDays) {
+  var a = args();
+
+  // Plan 9 / 9front mode: run `./8.out chronos_state.lux 9front`
+  if (a.length > 0 and a[0] == "9front") {
+    // `date -n` prints raw UTC epoch seconds; adjust -21600s (-6h) for CST
+   var rawSec = run("date -n");
+    var localSec = parseJSON(rawSec) - 21600; // CST (-6h)
+    var days = (localSec - (localSec % 86400)) / 86400;
+    var rem = localSec - (days * 86400);
+    var h = (rem - (rem % 3600)) / 3600;
+    var afterH = rem - (h * 3600);
+    var m = (afterH - (afterH % 60)) / 60;
+    var s = afterH - (m * 60);
+    return Chronos(h, m, s, days, anchorUnixDays);
+  }
+
+  // POSIX / macOS mode (default)
   var cmd = "sh -c '";
   cmd = cmd + "h=$(date +%-H); m=$(date +%-M); s=$(date +%-S); ";
   cmd = cmd + "off=$(date +%z | awk \"{print substr(\\$0,1,1)(substr(\\$0,2,2)*3600 + substr(\\$0,4,2)*60)}\"); ";
   cmd = cmd + "now_days=$(( ($(date +%s) + off) / 86400 )); ";
-  cmd = cmd + "anc_sec=$(date -j -f \"%Y-%m-%d %H:%M:%S\" \"" + anchorDateStr + " 00:00:00\" +%s); ";
-  cmd = cmd + "anc_days=$(( (anc_sec + off) / 86400 )); ";
-  cmd = cmd + "echo \"{\\\"h\\\":$h,\\\"m\\\":$m,\\\"s\\\":$s,\\\"days\\\":$now_days,\\\"anchor\\\":$anc_days}\"";
+  cmd = cmd + "echo \"{\\\"h\\\":$h,\\\"m\\\":$m,\\\"s\\\":$s,\\\"days\\\":$now_days}\"";
   cmd = cmd + "'";
 
   var d = parseJSON(run(cmd));
-  return Chronos(d.h, d.m, d.s, d.days, d.anchor);
+  return Chronos(d.h, d.m, d.s, d.days, anchorUnixDays);
 }
 
-var chronos = nowChronos("2026-05-18");
+
+var chronos = nowChronos(20454);
 
 print "Metric Time:    " + chronos.centidays() + " LMT";
 print "Dekade Day:     " + chronos.dekadeDay() + " / 10";

@@ -1,0 +1,152 @@
+// chronos_wheel.lux — Live Concentric SVG Wheel Server on Port 8080
+
+class PlanetInfo {
+  init(name, root, archangel, spirit, color, glyph) {
+    this.name = name;
+    this.root = root;
+    this.archangel = archangel;
+    this.spirit = spirit;
+    this.color = color;
+    this.glyph = glyph;
+  }
+}
+
+class Chronos {
+  init(hour, minute, second, unixDays, anchorUnixDays) {
+    this.hour = hour;
+    this.minute = minute;
+    this.second = second;
+    this.unixDays = unixDays;
+    this.personalDays = unixDays - anchorUnixDays;
+  }
+
+  centidays() {
+    var fraction = (this.second / 86400.0) + (this.minute / 1440.0) + (this.hour / 24.0);
+    return fraction * 100.0;
+  }
+
+  dekadeDay() { return (this.personalDays % 10) + 1; }
+  twentyDaySprint() { return (this.personalDays % 20) + 1; }
+  hundredDayArc() { return (this.personalDays % 100) + 1; }
+  solarYearArc() { return (this.personalDays % 365) + 1; }
+
+  planetDetails(planetName) {
+    if (planetName == "Sun")     return PlanetInfo("Sun", 1, "Michael", "Och", "#F59E0B", "☉");
+    if (planetName == "Moon")    return PlanetInfo("Moon", 2, "Gabriel", "Phul", "#94A3B8", "☽");
+    if (planetName == "Jupiter") return PlanetInfo("Jupiter", 3, "Sachiel", "Bethor", "#3B82F6", "♃");
+    if (planetName == "Mercury") return PlanetInfo("Mercury", 5, "Raphael", "Ophiel", "#10B981", "☿");
+    if (planetName == "Venus")   return PlanetInfo("Venus", 6, "Anael", "Hagith", "#EC4899", "♀");
+    if (planetName == "Saturn")  return PlanetInfo("Saturn", 8, "Cassiel", "Aratron", "#8B5CF6", "♄");
+    if (planetName == "Mars")    return PlanetInfo("Mars", 9, "Samael", "Phaleg", "#EF4444", "♂");
+    return PlanetInfo("Unknown", 0, "None", "None", "#64748B", "✦");
+  }
+
+  dayPlanet() {
+    var weekOrder = ["Jupiter", "Venus", "Saturn", "Sun", "Moon", "Mars", "Mercury"];
+    return this.planetDetails(weekOrder[this.unixDays % 7]);
+  }
+
+  planetaryHour() {
+    var chaldean = ["Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon"];
+    var effectiveDays = this.unixDays;
+    var hoursSinceSunrise = this.hour - 6;
+    if (hoursSinceSunrise < 0) {
+      effectiveDays = effectiveDays - 1;
+      hoursSinceSunrise = hoursSinceSunrise + 24;
+    }
+    var dayStartOffset = ((effectiveDays % 7) * 3) + 1;
+    var index = (dayStartOffset + hoursSinceSunrise) % 7;
+    return this.planetDetails(chaldean[index]);
+  }
+}
+
+fun nowChronos(anchorUnixDays) {
+  var a = args();
+  if (a.length > 0 and a == "9front") {
+    var rawSec = run("date -n");
+    var localSec = parseJSON(rawSec) - 21600; // CST (-6h)
+    var days = (localSec - (localSec % 86400)) / 86400;
+    var rem = localSec - (days * 86400);
+    var h = (rem - (rem % 3600)) / 3600;
+    var afterH = rem - (h * 3600);
+    var m = (afterH - (afterH % 60)) / 60;
+    var s = afterH - (m * 60);
+    return Chronos(h, m, s, days, anchorUnixDays);
+  }
+
+  var cmd = "sh -c '";
+  cmd = cmd + "h=$(date +%-H); m=$(date +%-M); s=$(date +%-S); ";
+  cmd = cmd + "off=$(date +%z | awk \"{print substr(\\$0,1,1)(substr(\\$0,2,2)*3600 + substr(\\$0,4,2)*60)}\"); ";
+  cmd = cmd + "now_days=$(( ($(date +%s) + off) / 86400 )); ";
+  cmd = cmd + "echo \"{\\\"h\\\":$h,\\\"m\\\":$m,\\\"s\\\":$s,\\\"days\\\":$now_days}\"";
+  cmd = cmd + "'";
+  var d = parseJSON(run(cmd));
+  return Chronos(d.h, d.m, d.s, d.days, anchorUnixDays);
+}
+
+// Helper to generate an SVG circular progress ring (rotated -90deg so 0% is at 12 o'clock)
+fun svgRing(cx, cy, r, strokeWidth, progressFraction, color) {
+  var circumference = 2.0 * 3.14159265 * r;
+  var offset = circumference * (1.0 - progressFraction);
+  var s = "<circle cx=\"" + cx + "\" cy=\"" + cy + "\" r=\"" + r + "\" fill=\"none\" stroke=\"#1E293B\" stroke-width=\"" + strokeWidth + "\" />";
+  s = s + "<circle cx=\"" + cx + "\" cy=\"" + cy + "\" r=\"" + r + "\" fill=\"none\" stroke=\"" + color + "\" stroke-width=\"" + strokeWidth + "\" ";
+  s = s + "stroke-linecap=\"round\" stroke-dasharray=\"" + circumference + "\" stroke-dashoffset=\"" + offset + "\" ";
+  s = s + "transform=\"rotate(-90 " + cx + " " + cy + ")\" />";
+  return s;
+}
+
+fun renderWheelPage(c) {
+  var dPlanet = c.dayPlanet();
+  var hPlanet = c.planetaryHour();
+
+  var metricFrac = c.centidays() / 100.0;
+  var sprintFrac = c.twentyDaySprint() / 20.0;
+  var hundredFrac = c.hundredDayArc() / 100.0;
+  var solarFrac = c.solarYearArc() / 365.0;
+
+  var html = "<!DOCTYPE html><html><head><meta charset=\"utf-8\">";
+  html = html + "<meta http-equiv=\"refresh\" content=\"15\">";
+  html = html + "<title>Chronos Wheel</title>";
+  html = html + "<style>body{background:#090D16;color:#F8FAFC;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;}";
+  html = html + ".legend{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 28px;margin-top:24px;background:#111827;padding:18px 24px;border-radius:14px;border:1px solid #1F2937;font-size:14px;}";
+  html = html + ".dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;}</style></head><body>";
+
+  // SVG Canvas (460x460)
+  html = html + "<svg width=\"460\" height=\"460\" viewBox=\"0 0 460 460\">";
+  
+  // Outer -> Inner Concentric Rings
+  html = html + svgRing(230, 230, 195, 16, metricFrac, "#38BDF8");       // Outer: Metric Day (Cyan)
+  html = html + svgRing(230, 230, 162, 14, sprintFrac, dPlanet.color);   // 2nd: 20-Day Sprint (Day Planet Color)
+  html = html + svgRing(230, 230, 132, 12, hundredFrac, hPlanet.color);  // 3rd: 100-Day Arc (Hour Planet Color)
+  html = html + svgRing(230, 230, 105, 10, solarFrac, "#FBBF24");        // Inner: 365-Day Solar Arc (Gold)
+
+  // Center Planetary Core
+  html = html + "<circle cx=\"230\" cy=\"230\" r=\"82\" fill=\"#0F172A\" stroke=\"" + dPlanet.color + "\" stroke-width=\"2\" />";
+  html = html + "<text x=\"230\" y=\"202\" text-anchor=\"middle\" fill=\"" + dPlanet.color + "\" font-size=\"28\" font-weight=\"bold\">" + dPlanet.glyph + " " + hPlanet.glyph + "</text>";
+  html = html + "<text x=\"230\" y=\"232\" text-anchor=\"middle\" fill=\"#F8FAFC\" font-size=\"22\" font-weight=\"700\">" + c.centidays() + "</text>";
+  html = html + "<text x=\"230\" y=\"250\" text-anchor=\"middle\" fill=\"#94A3B8\" font-size=\"11\" letter-spacing=\"2\">CENTIDAYS LMT</text>";
+  html = html + "<text x=\"230\" y=\"272\" text-anchor=\"middle\" fill=\"" + hPlanet.color + "\" font-size=\"12\" font-weight=\"600\">" + dPlanet.name + " [" + dPlanet.root + "] / " + hPlanet.name + " [" + hPlanet.root + "]</text>";
+  html = html + "</svg>";
+
+  // Readout Legend
+  html = html + "<div class=\"legend\">";
+  html = html + "<div><span class=\"dot\" style=\"background:#38BDF8\"></span><b>Metric Day:</b> " + c.centidays() + " LMT</div>";
+  html = html + "<div><span class=\"dot\" style=\"background:" + dPlanet.color + "\"></span><b>20-Day Sprint:</b> Day " + c.twentyDaySprint() + " / 20 (Dekade " + c.dekadeDay() + ")</div>";
+  html = html + "<div><span class=\"dot\" style=\"background:" + hPlanet.color + "\"></span><b>100-Day Arc:</b> Day " + c.hundredDayArc() + " / 100</div>";
+  html = html + "<div><span class=\"dot\" style=\"background:#FBBF24\"></span><b>Solar Year:</b> Day " + c.solarYearArc() + " / 365</div>";
+  html = html + "<div><b>Day Ruler:</b> " + dPlanet.name + " (" + dPlanet.archangel + " / " + dPlanet.spirit + ")</div>";
+  html = html + "<div><b>Hour Ruler:</b> " + hPlanet.name + " (" + hPlanet.archangel + " / " + hPlanet.spirit + ")</div>";
+  html = html + "</div></body></html>";
+
+  return html;
+}
+
+fun handleWheel(req, res) {
+  var chronos = nowChronos(20454); // Anchored to 2026-01-01
+  res.html(renderWheelPage(chronos));
+}
+
+var server = Server(8080);
+server.get("/", handleWheel);
+print "Chronos Wheel running at http://localhost:8080 ...";
+server.start();

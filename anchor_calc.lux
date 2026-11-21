@@ -1,0 +1,76 @@
+// anchor_calc.lux — Pure Lux Anchor Date -> Unix Days Calculator
+// Usage:
+//   lux anchor_calc.lux 2026-11-20
+//   lux anchor_calc.lux              (uses today or prompts/defaults)
+
+fun floorDiv(a, b) {
+  var rem = a % b;
+  if (rem < 0) rem = rem + b;
+  return (a - rem) / b;
+}
+
+// Howard Hinnant's civil-to-days algorithm (exact Gregorian -> Unix Epoch days)
+// Works on 9front, macOS, Linux, OpenBSD with zero shell dependencies!
+fun dateToUnixDays(year, month, day) {
+  var y = year;
+  if (month <= 2) {
+    y = y - 1;
+  }
+  var era = floorDiv(y, 400);
+  var yoe = y - era * 400; // [0, 399]
+  var mAdj = month + 9;
+  if (month > 2) {
+    mAdj = month - 3;
+  }
+  var doy = floorDiv(153 * mAdj + 2, 5) + day - 1; // [0, 365]
+  var doe = yoe * 365 + floorDiv(yoe, 4) - floorDiv(yoe, 100) + doy; // [0, 146096]
+  return era * 146097 + doe - 719468;
+}
+
+fun parseDateString(dateStr) {
+  var parts = strSplit(dateStr, "-");
+  if (parts.length != 3) {
+    return nil;
+  }
+  // parseJSON turns numeric strings like "2026" into numbers;
+  // strip leading zeros ("05" -> "5") so JSON parsing stays valid!
+  var y = parseJSON(parts[0]);
+  var mStr = parts[1];
+  print "mStr: " + mStr;
+  var dStr = parts[2];
+  print "dStr: " + dStr;
+  if (len(mStr) == 2 and mStr[0] == "0") mStr = mStr[1];
+  if (len(dStr) == 2 and dStr[0] == "0") dStr = dStr[1];
+
+  print "mStr again: " + mStr;
+  print "dStr again: " + dStr;
+
+  var m = parseJSON(mStr);
+  var d = parseJSON(dStr);
+  return dateToUnixDays(y, m, d);
+}
+
+// --- CLI Entry Point ---
+var a = args();
+if (a.length == 0) {
+  print "Usage: lux anchor_calc.lux YYYY-MM-DD";
+  print "Example: lux anchor_calc.lux 2026-11-20";
+  exit(1);
+}
+
+var targetDate = a[0];
+var anchorDays = parseDateString(targetDate);
+
+if (anchorDays == nil) {
+  print "Invalid date format. Please use YYYY-MM-DD (e.g., 2026-11-20).";
+  exit(1);
+}
+
+print "==========================================";
+print " Chronos Anchor Calculator";
+print "==========================================";
+print "Anchor Date (" + targetDate + ") -> Unix Days: " + anchorDays;
+print "";
+print "Copy this line into chronos_state.lux:";
+print "var MY_ANCHOR = " + anchorDays + "; // " + targetDate;
+print "var chronos = nowChronos(MY_ANCHOR);";
