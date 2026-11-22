@@ -1,4 +1,4 @@
-// chronos_wheel.lux — Live Concentric SVG Wheel Server on Port 8080
+// chronos_wheel.lux — Concentric SVG Wheel + Deciday Markers + Obsidian Copy
 
 class PlanetInfo {
   init(name, root, archangel, spirit, color, glyph) {
@@ -58,6 +58,23 @@ class Chronos {
     var index = (dayStartOffset + hoursSinceSunrise) % 7;
     return this.planetDetails(chaldean[index]);
   }
+
+  toObsidianYAML() {
+    var dPlanet = this.dayPlanet();
+    var hPlanet = this.planetaryHour();
+    var out = "---\\n";
+    out = out + "metric_time: " + this.centidays() + " LMT\\n";
+    out = out + "dekade_day: " + this.dekadeDay() + "\\n";
+    out = out + "twenty_sprint: " + this.twentyDaySprint() + "\\n";
+    out = out + "hundred_arc: " + this.hundredDayArc() + "\\n";
+    out = out + "solar_arc: " + this.solarYearArc() + "\\n";
+    out = out + "day_planet: " + dPlanet.name + "\\n";
+    out = out + "day_root: " + dPlanet.root + "\\n";
+    out = out + "hour_planet: " + hPlanet.name + "\\n";
+    out = out + "hour_root: " + hPlanet.root + "\\n";
+    out = out + "---";
+    return out;
+  }
 }
 
 fun nowChronos(anchorUnixDays) {
@@ -84,7 +101,6 @@ fun nowChronos(anchorUnixDays) {
   return Chronos(d.h, d.m, d.s, d.days, anchorUnixDays);
 }
 
-// Helper to generate an SVG circular progress ring (rotated -90deg so 0% is at 12 o'clock)
 fun svgRing(cx, cy, r, strokeWidth, progressFraction, color) {
   var circumference = 2.0 * 3.14159265 * r;
   var offset = circumference * (1.0 - progressFraction);
@@ -93,6 +109,30 @@ fun svgRing(cx, cy, r, strokeWidth, progressFraction, color) {
   s = s + "stroke-linecap=\"round\" stroke-dasharray=\"" + circumference + "\" stroke-dashoffset=\"" + offset + "\" ";
   s = s + "transform=\"rotate(-90 " + cx + " " + cy + ")\" />";
   return s;
+}
+
+// Draws 10 Deciday radial tick marks & labels (00, 10, 20 ... 90) around the outer ring
+fun svgDecidayMarkers(cx, cy, rInner, rOuter, rLabel) {
+  // Precomputed unit vectors for 10 segments (every 36 degrees starting at 12 o'clock)
+  var cosVals = [0.0, 0.587785, 0.951057, 0.951057, 0.587785, 0.0, -0.587785, -0.951057, -0.951057, -0.587785];
+  var sinVals = [-1.0, -0.809017, -0.309017, 0.309017, 0.809017, 1.0, 0.809017, 0.309017, -0.309017, -0.809017];
+  var labels  = ["00", "10", "20", "30", "40", "50", "60", "70", "80", "90"];
+
+  var out = "";
+  var i = 0;
+  while (i < 10) {
+    var x1 = cx + (rInner * cosVals[i]);
+    var y1 = cy + (rInner * sinVals[i]);
+    var x2 = cx + (rOuter * cosVals[i]);
+    var y2 = cy + (rOuter * sinVals[i]);
+    var lx = cx + (rLabel * cosVals[i]);
+    var ly = cy + (rLabel * sinVals[i]) + 4;
+
+    out = out + "<line x1=\"" + x1 + "\" y1=\"" + y1 + "\" x2=\"" + x2 + "\" y2=\"" + y2 + "\" stroke=\"#475569\" stroke-width=\"2\" />";
+    out = out + "<text x=\"" + lx + "\" y=\"" + ly + "\" text-anchor=\"middle\" fill=\"#94A3B8\" font-size=\"11\" font-weight=\"600\">" + labels[i] + "</text>";
+    i = i + 1;
+  }
+  return out;
 }
 
 fun renderWheelPage(c) {
@@ -107,25 +147,27 @@ fun renderWheelPage(c) {
   var html = "<!DOCTYPE html><html><head><meta charset=\"utf-8\">";
   html = html + "<meta http-equiv=\"refresh\" content=\"15\">";
   html = html + "<title>Chronos Wheel</title>";
-  html = html + "<style>body{background:#090D16;color:#F8FAFC;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;}";
-  html = html + ".legend{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 28px;margin-top:24px;background:#111827;padding:18px 24px;border-radius:14px;border:1px solid #1F2937;font-size:14px;}";
-  html = html + ".dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;}</style></head><body>";
+  html = html + "<style>body{background:#090D16;color:#F8FAFC;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:20px;}";
+  html = html + ".legend{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 28px;margin-top:16px;background:#111827;padding:18px 24px;border-radius:14px;border:1px solid #1F2937;font-size:14px;}";
+  html = html + ".dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;}";
+  html = html + "button{margin-top:16px;background:#1E293B;color:#38BDF8;border:1px solid #334155;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;}";
+  html = html + "button:hover{background:#334155;}</style></head><body>";
 
-  // SVG Canvas (460x460)
-  html = html + "<svg width=\"460\" height=\"460\" viewBox=\"0 0 460 460\">";
-  
-  // Outer -> Inner Concentric Rings
-  html = html + svgRing(230, 230, 195, 16, metricFrac, "#38BDF8");       // Outer: Metric Day (Cyan)
-  html = html + svgRing(230, 230, 162, 14, sprintFrac, dPlanet.color);   // 2nd: 20-Day Sprint (Day Planet Color)
-  html = html + svgRing(230, 230, 132, 12, hundredFrac, hPlanet.color);  // 3rd: 100-Day Arc (Hour Planet Color)
-  html = html + svgRing(230, 230, 105, 10, solarFrac, "#FBBF24");        // Inner: 365-Day Solar Arc (Gold)
+  // SVG Canvas (500x500 to fit outer deciday labels)
+  html = html + "<svg width=\"500\" height=\"500\" viewBox=\"0 0 500 500\">";
+  html = html + svgDecidayMarkers(250, 250, 206, 216, 232);
+
+  html = html + svgRing(250, 250, 192, 16, metricFrac, "#38BDF8");       // Outer: Metric Day (Cyan)
+  html = html + svgRing(250, 250, 160, 14, sprintFrac, dPlanet.color);   // 2nd: 20-Day Sprint
+  html = html + svgRing(250, 250, 130, 12, hundredFrac, hPlanet.color);  // 3rd: 100-Day Arc
+  html = html + svgRing(250, 250, 102, 10, solarFrac, "#FBBF24");        // Inner: 365-Day Solar Arc
 
   // Center Planetary Core
-  html = html + "<circle cx=\"230\" cy=\"230\" r=\"82\" fill=\"#0F172A\" stroke=\"" + dPlanet.color + "\" stroke-width=\"2\" />";
-  html = html + "<text x=\"230\" y=\"202\" text-anchor=\"middle\" fill=\"" + dPlanet.color + "\" font-size=\"28\" font-weight=\"bold\">" + dPlanet.glyph + " " + hPlanet.glyph + "</text>";
-  html = html + "<text x=\"230\" y=\"232\" text-anchor=\"middle\" fill=\"#F8FAFC\" font-size=\"22\" font-weight=\"700\">" + c.centidays() + "</text>";
-  html = html + "<text x=\"230\" y=\"250\" text-anchor=\"middle\" fill=\"#94A3B8\" font-size=\"11\" letter-spacing=\"2\">CENTIDAYS LMT</text>";
-  html = html + "<text x=\"230\" y=\"272\" text-anchor=\"middle\" fill=\"" + hPlanet.color + "\" font-size=\"12\" font-weight=\"600\">" + dPlanet.name + " [" + dPlanet.root + "] / " + hPlanet.name + " [" + hPlanet.root + "]</text>";
+  html = html + "<circle cx=\"250\" cy=\"250\" r=\"80\" fill=\"#0F172A\" stroke=\"" + dPlanet.color + "\" stroke-width=\"2\" />";
+  html = html + "<text x=\"250\" y=\"222\" text-anchor=\"middle\" fill=\"" + dPlanet.color + "\" font-size=\"28\" font-weight=\"bold\">" + dPlanet.glyph + " " + hPlanet.glyph + "</text>";
+  html = html + "<text x=\"250\" y=\"252\" text-anchor=\"middle\" fill=\"#F8FAFC\" font-size=\"22\" font-weight=\"700\">" + c.centidays() + "</text>";
+  html = html + "<text x=\"250\" y=\"270\" text-anchor=\"middle\" fill=\"#94A3B8\" font-size=\"11\" letter-spacing=\"2\">CENTIDAYS LMT</text>";
+  html = html + "<text x=\"250\" y=\"292\" text-anchor=\"middle\" fill=\"" + hPlanet.color + "\" font-size=\"12\" font-weight=\"600\">" + dPlanet.name + " [" + dPlanet.root + "] / " + hPlanet.name + " [" + hPlanet.root + "]</text>";
   html = html + "</svg>";
 
   // Readout Legend
@@ -136,8 +178,11 @@ fun renderWheelPage(c) {
   html = html + "<div><span class=\"dot\" style=\"background:#FBBF24\"></span><b>Solar Year:</b> Day " + c.solarYearArc() + " / 365</div>";
   html = html + "<div><b>Day Ruler:</b> " + dPlanet.name + " (" + dPlanet.archangel + " / " + dPlanet.spirit + ")</div>";
   html = html + "<div><b>Hour Ruler:</b> " + hPlanet.name + " (" + hPlanet.archangel + " / " + hPlanet.spirit + ")</div>";
-  html = html + "</div></body></html>";
+  html = html + "</div>";
 
+  // One-click Obsidian YAML copy button
+  html = html + "<button onclick=\"navigator.clipboard.writeText('" + c.toObsidianYAML() + "');this.innerText='Copied Obsidian YAML!';\">Copy Obsidian YAML Frontmatter</button>";
+  html = html + "</body></html>";
   return html;
 }
 
