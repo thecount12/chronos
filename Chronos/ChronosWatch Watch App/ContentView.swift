@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import WatchKit
 
 struct ContentView: View {
     @State private var now = Date()
@@ -23,55 +24,53 @@ struct ContentView: View {
         let engine = ChronosEngine(date: displayDate, anchorDate: anchorDate)
         let dPlanet = engine.dayPlanet
         let hPlanet = engine.planetaryHour
+        let bounds = WKInterfaceDevice.current().screenBounds
+        let diameter = min(bounds.width, bounds.height) - 4
         
         TabView {
             // PAGE 1: Edge-to-Edge Concentric Wheel
-            GeometryReader { geo in
-                let diameter = min(geo.size.width, geo.size.height) - 4
+            ZStack {
+                Color.black.ignoresSafeArea()
                 
-                ZStack {
-                    Color.black.ignoresSafeArea()
-                    
-                    ForEach(0..<10, id: \.self) { i in
-                        VStack {
-                            Text(String(format: "%02d", i * 10))
-                                .font(.system(size: 8, weight: .bold, design: .rounded))
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                        }
-                        .frame(width: diameter, height: diameter)
-                        .rotationEffect(.degrees(Double(i) * 36.0))
-                    }
-                    
-                    WatchRing(progress: engine.centidays / 100.0, color: .cyan, lineWidth: 8)
-                        .frame(width: diameter - 22, height: diameter - 22)
-                    
-                    WatchRing(progress: Double(engine.twentyDaySprint) / 20.0, color: dPlanet.color, lineWidth: 7)
-                        .frame(width: diameter - 38, height: diameter - 38)
-                    
-                    WatchRing(progress: Double(engine.hundredDayArc) / 100.0, color: hPlanet.color, lineWidth: 5)
-                        .frame(width: diameter - 52, height: diameter - 52)
-                    
-                    VStack(spacing: 1) {
-                        Text("\(dPlanet.glyph)\u{FE0E} \(hPlanet.glyph)\u{FE0E}")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundStyle(dPlanet.color)
-                        
-                        Text(engine.formattedMetric)
-                            .font(.system(size: 18, weight: .black, design: .rounded))
-                            .monospacedDigit()
-                        
-                        Text(engine.formattedStandard)
-                            .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                            .foregroundStyle(.secondary)
-                        
-                        Text(crownOffsetCentidays == 0 ? "\(dPlanet.name.prefix(4)) • \(hPlanet.name.prefix(4))" : String(format: "%+.0f cd", crownOffsetCentidays))
+                ForEach(0..<10, id: \.self) { i in
+                    VStack {
+                        Text(String(format: "%02d", i * 10))
                             .font(.system(size: 8, weight: .bold, design: .rounded))
-                            .foregroundStyle(crownOffsetCentidays == 0 ? hPlanet.color : .yellow)
+                            .foregroundStyle(.secondary)
+                        Spacer()
                     }
+                    .frame(width: diameter, height: diameter)
+                    .rotationEffect(.degrees(Double(i) * 36.0))
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                WatchRing(progress: engine.centidays / 100.0, color: .cyan, lineWidth: 8)
+                    .frame(width: diameter - 22, height: diameter - 22)
+                
+                WatchRing(progress: Double(engine.twentyDaySprint) / 20.0, color: dPlanet.color, lineWidth: 7)
+                    .frame(width: diameter - 38, height: diameter - 38)
+                
+                WatchRing(progress: Double(engine.hundredDayArc) / 100.0, color: hPlanet.color, lineWidth: 5)
+                    .frame(width: diameter - 52, height: diameter - 52)
+                
+                VStack(spacing: 1) {
+                    Text("\(dPlanet.glyph)\u{FE0E} \(hPlanet.glyph)\u{FE0E}")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(dPlanet.color)
+                    
+                    Text(engine.formattedMetric)
+                        .font(.system(size: 18, weight: .black, design: .rounded))
+                        .monospacedDigit()
+                    
+                    Text(engine.formattedStandard)
+                        .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                    
+                    Text(crownOffsetCentidays == 0 ? "\(dPlanet.name.prefix(4)) • \(hPlanet.name.prefix(4))" : String(format: "%+.0f cd", crownOffsetCentidays))
+                        .font(.system(size: 8, weight: .bold, design: .rounded))
+                        .foregroundStyle(crownOffsetCentidays == 0 ? hPlanet.color : .yellow)
+                }
             }
+            .frame(width: bounds.width, height: bounds.height)
             .ignoresSafeArea()
             .focusable()
             .focused($isCrownFocused)
