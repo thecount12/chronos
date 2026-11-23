@@ -9,7 +9,7 @@ import UIKit
 struct ContentView: View {
     @State private var now = Date()
     @AppStorage("anchorTimestamp") private var anchorTimestamp: Double = {
-        Calendar.current.date(from: DateComponents(year: 2026, month: 1, day: 1))?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
+        ChronosEngine.mostRecentBirthday(month: 5, day: 18).timeIntervalSince1970
     }()
     @State private var copiedFeedback = false
     
@@ -29,9 +29,7 @@ struct ContentView: View {
         
         ScrollView {
             VStack(spacing: 22) {
-                // Concentric Wheel Canvas
                 ZStack {
-                    // 10 Deciday Markers
                     ForEach(0..<10, id: \.self) { i in
                         VStack {
                             Text(String(format: "%02d", i * 10))
@@ -43,23 +41,18 @@ struct ContentView: View {
                         .rotationEffect(.degrees(Double(i) * 36.0))
                     }
                     
-                    // Outer Ring: Metric Centidays
                     ChronosRingView(progress: engine.centidays / 100.0, color: .cyan, lineWidth: 14)
                         .frame(width: 284, height: 284)
                     
-                    // 2nd Ring: 20-Day Sprint
                     ChronosRingView(progress: Double(engine.twentyDaySprint) / 20.0, color: dPlanet.color, lineWidth: 12)
                         .frame(width: 246, height: 246)
                     
-                    // 3rd Ring: 100-Day Arc
                     ChronosRingView(progress: Double(engine.hundredDayArc) / 100.0, color: hPlanet.color, lineWidth: 10)
                         .frame(width: 212, height: 212)
                     
-                    // Inner Ring: 365-Day Solar Arc
                     ChronosRingView(progress: Double(engine.solarYearArc) / 365.0, color: .yellow, lineWidth: 8)
                         .frame(width: 182, height: 182)
                     
-                    // Center Dual-Time Core
                     VStack(spacing: 3) {
                         Text("\(dPlanet.glyph) \(hPlanet.glyph)")
                             .font(.system(size: 22, weight: .bold))
@@ -80,7 +73,6 @@ struct ContentView: View {
                 }
                 .padding(.top, 16)
                 
-                // Cycle Telemetry Card
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text("Dekade: \(engine.dekadeDay) / 10")
@@ -103,10 +95,38 @@ struct ContentView: View {
                 .background(RoundedRectangle(cornerRadius: 12).fill(.ultraThinMaterial))
                 .padding(.horizontal)
                 
-                // Personal Anchor DatePicker & Obsidian Copy Button
-                HStack(spacing: 12) {
-                    DatePicker("Anchor", selection: anchorBinding, displayedComponents: .date)
-                        .labelsHidden()
+                VStack(spacing: 10) {
+                    HStack(spacing: 8) {
+                        Text("Cycle Anchor:")
+                            .font(.caption.bold())
+                            .foregroundStyle(.secondary)
+                        
+                        DatePicker("Anchor", selection: anchorBinding, displayedComponents: .date)
+                            .labelsHidden()
+                        
+                        Spacer()
+                        
+                        Button("Birthday") {
+                            anchorTimestamp = ChronosEngine.mostRecentBirthday(month: 5, day: 18).timeIntervalSince1970
+                        }
+                        .buttonStyle(.bordered)
+                        .font(.caption.bold())
+                        
+                        Button("Jan 1") {
+                            let year = Calendar.current.component(.year, from: now)
+                            if let jan1 = Calendar.current.date(from: DateComponents(year: year, month: 1, day: 1)) {
+                                anchorTimestamp = jan1.timeIntervalSince1970
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .font(.caption.bold())
+                        
+                        Button("Today") {
+                            anchorTimestamp = Calendar.current.startOfDay(for: now).timeIntervalSince1970
+                        }
+                        .buttonStyle(.bordered)
+                        .font(.caption.bold())
+                    }
                     
                     Button {
                         copyToClipboard(engine.toObsidianYAML())

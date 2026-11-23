@@ -67,6 +67,18 @@ struct ChronosEngine {
         }
     }
     
+    // Computes the most recent occurrence of a user's birthday (e.g., May 18)
+    static func mostRecentBirthday(month: Int = 5, day: Int = 18, relativeTo now: Date = Date()) -> Date {
+        let cal = Calendar.current
+        let currentYear = cal.component(.year, from: now)
+        if let thisYearBday = cal.date(from: DateComponents(year: currentYear, month: month, day: day)),
+           thisYearBday <= cal.startOfDay(for: now) {
+            return thisYearBday
+        }
+        return cal.date(from: DateComponents(year: currentYear - 1, month: month, day: day)) ?? now
+    }
+
+    
     var dayPlanet: PlanetInfo {
         // Calendar weekday: 1=Sun, 2=Mon, 3=Tue, 4=Wed, 5=Thu, 6=Fri, 7=Sat
         let weekday = Calendar.current.component(.weekday, from: date)

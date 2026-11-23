@@ -6,14 +6,108 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AC612E7130B3B6CC001FE56F /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC612E7030B3B6CC001FE56F /* WidgetKit.framework */; };
+		AC612E7330B3B6CC001FE56F /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC612E7230B3B6CC001FE56F /* SwiftUI.framework */; };
+		AC612E8E30B3D0AA001FE56F /* ChronosWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = AC612E8D30B3D0AA001FE56F /* ChronosWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AC612EA630B40854001FE56F /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC612E7030B3B6CC001FE56F /* WidgetKit.framework */; };
+		AC612EA730B40854001FE56F /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC612E7230B3B6CC001FE56F /* SwiftUI.framework */; };
+		AC612EB630B40855001FE56F /* ChronosComplicationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC612EA530B40854001FE56F /* ChronosComplicationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AC612E8F30B3D0AA001FE56F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC612E5130B380FD001FE56F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AC612E8C30B3D0AA001FE56F;
+			remoteInfo = "ChronosWatch Watch App";
+		};
+		AC612EB430B40855001FE56F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC612E5130B380FD001FE56F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AC612EA430B40854001FE56F;
+			remoteInfo = ChronosComplicationExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AC612E9B30B3D0AB001FE56F /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolder = Product;
+			files = (
+				AC612E8E30B3D0AA001FE56F /* ChronosWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+		};
+		AC612EBB30B40855001FE56F /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				AC612EB630B40855001FE56F /* ChronosComplicationExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		AC612E5930B380FD001FE56F /* Chronos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronos.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC612E6E30B3B6CC001FE56F /* ChronosWatchExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ChronosWatchExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC612E7030B3B6CC001FE56F /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		AC612E7230B3B6CC001FE56F /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		AC612E8830B3D0AA001FE56F /* ChronosWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChronosWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC612E8D30B3D0AA001FE56F /* ChronosWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ChronosWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC612EA530B40854001FE56F /* ChronosComplicationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ChronosComplicationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AC612EA030B3D2D5001FE56F /* Exceptions for "Chronos" folder in "ChronosWatch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ChronosEngine.swift,
+			);
+			target = AC612E8C30B3D0AA001FE56F /* ChronosWatch Watch App */;
+		};
+		AC612EBA30B40855001FE56F /* Exceptions for "ChronosComplication" folder in "ChronosComplicationExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AC612EA430B40854001FE56F /* ChronosComplicationExtension */;
+		};
+		AC612EBD30B4086A001FE56F /* Exceptions for "Chronos" folder in "ChronosComplicationExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ChronosEngine.swift,
+			);
+			target = AC612EA430B40854001FE56F /* ChronosComplicationExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AC612E5B30B380FD001FE56F /* Chronos */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AC612EA030B3D2D5001FE56F /* Exceptions for "Chronos" folder in "ChronosWatch Watch App" target */,
+				AC612EBD30B4086A001FE56F /* Exceptions for "Chronos" folder in "ChronosComplicationExtension" target */,
+			);
 			path = Chronos;
+			sourceTree = "<group>";
+		};
+		AC612E9130B3D0AA001FE56F /* ChronosWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "ChronosWatch Watch App";
+			sourceTree = "<group>";
+		};
+		AC612EA830B40854001FE56F /* ChronosComplication */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AC612EBA30B40855001FE56F /* Exceptions for "ChronosComplication" folder in "ChronosComplicationExtension" target */,
+			);
+			path = ChronosComplication;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -24,6 +118,25 @@
 			files = (
 			);
 		};
+		AC612E6B30B3B6CC001FE56F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				AC612E7330B3B6CC001FE56F /* SwiftUI.framework in Frameworks */,
+				AC612E7130B3B6CC001FE56F /* WidgetKit.framework in Frameworks */,
+			);
+		};
+		AC612E8A30B3D0AA001FE56F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		AC612EA230B40854001FE56F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				AC612EA730B40854001FE56F /* SwiftUI.framework in Frameworks */,
+				AC612EA630B40854001FE56F /* WidgetKit.framework in Frameworks */,
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -31,6 +144,9 @@
 			isa = PBXGroup;
 			children = (
 				AC612E5B30B380FD001FE56F /* Chronos */,
+				AC612E9130B3D0AA001FE56F /* ChronosWatch Watch App */,
+				AC612EA830B40854001FE56F /* ChronosComplication */,
+				AC612E6F30B3B6CC001FE56F /* Frameworks */,
 				AC612E5A30B380FD001FE56F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -39,8 +155,21 @@
 			isa = PBXGroup;
 			children = (
 				AC612E5930B380FD001FE56F /* Chronos.app */,
+				AC612E6E30B3B6CC001FE56F /* ChronosWatchExtension.appex */,
+				AC612E8830B3D0AA001FE56F /* ChronosWatch.app */,
+				AC612E8D30B3D0AA001FE56F /* ChronosWatch Watch App.app */,
+				AC612EA530B40854001FE56F /* ChronosComplicationExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AC612E6F30B3B6CC001FE56F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AC612E7030B3B6CC001FE56F /* WidgetKit.framework */,
+				AC612E7230B3B6CC001FE56F /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -64,6 +193,78 @@
 			productReference = AC612E5930B380FD001FE56F /* Chronos.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AC612E6D30B3B6CC001FE56F /* ChronosWatchExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC612E8130B3B6CD001FE56F /* Build configuration list for PBXNativeTarget "ChronosWatchExtension" */;
+			buildPhases = (
+				AC612E6A30B3B6CC001FE56F /* Sources */,
+				AC612E6B30B3B6CC001FE56F /* Frameworks */,
+				AC612E6C30B3B6CC001FE56F /* Resources */,
+			);
+			buildRules = (
+			);
+			name = ChronosWatchExtension;
+			productName = ChronosWatchExtension;
+			productReference = AC612E6E30B3B6CC001FE56F /* ChronosWatchExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		AC612E8730B3D0AA001FE56F /* ChronosWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC612E9C30B3D0AB001FE56F /* Build configuration list for PBXNativeTarget "ChronosWatch" */;
+			buildPhases = (
+				AC612E8630B3D0AA001FE56F /* Resources */,
+				AC612E9B30B3D0AB001FE56F /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AC612E9030B3D0AA001FE56F /* PBXTargetDependency */,
+			);
+			name = ChronosWatch;
+			productName = ChronosWatch;
+			productReference = AC612E8830B3D0AA001FE56F /* ChronosWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		AC612E8C30B3D0AA001FE56F /* ChronosWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC612E9830B3D0AB001FE56F /* Build configuration list for PBXNativeTarget "ChronosWatch Watch App" */;
+			buildPhases = (
+				AC612E8930B3D0AA001FE56F /* Sources */,
+				AC612E8A30B3D0AA001FE56F /* Frameworks */,
+				AC612E8B30B3D0AA001FE56F /* Resources */,
+				AC612EBB30B40855001FE56F /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AC612EB530B40855001FE56F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AC612E9130B3D0AA001FE56F /* ChronosWatch Watch App */,
+			);
+			name = "ChronosWatch Watch App";
+			productName = "ChronosWatch Watch App";
+			productReference = AC612E8D30B3D0AA001FE56F /* ChronosWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AC612EA430B40854001FE56F /* ChronosComplicationExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC612EB730B40855001FE56F /* Build configuration list for PBXNativeTarget "ChronosComplicationExtension" */;
+			buildPhases = (
+				AC612EA130B40854001FE56F /* Sources */,
+				AC612EA230B40854001FE56F /* Frameworks */,
+				AC612EA330B40854001FE56F /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				AC612EA830B40854001FE56F /* ChronosComplication */,
+			);
+			name = ChronosComplicationExtension;
+			productName = ChronosComplicationExtension;
+			productReference = AC612EA530B40854001FE56F /* ChronosComplicationExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -75,6 +276,18 @@
 				LastUpgradeCheck = 2710;
 				TargetAttributes = {
 					AC612E5830B380FD001FE56F = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					AC612E6D30B3B6CC001FE56F = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					AC612E8730B3D0AA001FE56F = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					AC612E8C30B3D0AA001FE56F = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					AC612EA430B40854001FE56F = {
 						CreatedOnToolsVersion = 27.1;
 					};
 				};
@@ -94,12 +307,36 @@
 			projectRoot = "";
 			targets = (
 				AC612E5830B380FD001FE56F /* Chronos */,
+				AC612E6D30B3B6CC001FE56F /* ChronosWatchExtension */,
+				AC612E8730B3D0AA001FE56F /* ChronosWatch */,
+				AC612E8C30B3D0AA001FE56F /* ChronosWatch Watch App */,
+				AC612EA430B40854001FE56F /* ChronosComplicationExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		AC612E5730B380FD001FE56F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AC612E6C30B3B6CC001FE56F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AC612E8630B3D0AA001FE56F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AC612E8B30B3D0AA001FE56F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AC612EA330B40854001FE56F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -112,7 +349,35 @@
 			files = (
 			);
 		};
+		AC612E6A30B3B6CC001FE56F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		AC612E8930B3D0AA001FE56F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		AC612EA130B40854001FE56F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AC612E9030B3D0AA001FE56F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AC612E8C30B3D0AA001FE56F /* ChronosWatch Watch App */;
+			targetProxy = AC612E8F30B3D0AA001FE56F /* PBXContainerItemProxy */;
+		};
+		AC612EB530B40855001FE56F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AC612EA430B40854001FE56F /* ChronosComplicationExtension */;
+			targetProxy = AC612EB430B40855001FE56F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		AC612E6230B380FD001FE56F /* Debug configuration for PBXProject "Chronos" */ = {
@@ -319,6 +584,244 @@
 			};
 			name = Release;
 		};
+		AC612E8230B3B6CD001FE56F /* Debug configuration for PBXNativeTarget "ChronosWatchExtension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X98D4GJJ83;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChronosWatch/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ChronosWatch;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wg.local.ChronosWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		AC612E8330B3B6CD001FE56F /* Release configuration for PBXNativeTarget "ChronosWatchExtension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X98D4GJJ83;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChronosWatch/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ChronosWatch;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wg.local.ChronosWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
+		AC612E9930B3D0AB001FE56F /* Debug configuration for PBXNativeTarget "ChronosWatch Watch App" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X98D4GJJ83;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ChronosWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wg.local.ChronosWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		AC612E9A30B3D0AB001FE56F /* Release configuration for PBXNativeTarget "ChronosWatch Watch App" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X98D4GJJ83;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ChronosWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wg.local.ChronosWatch.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
+		AC612E9D30B3D0AB001FE56F /* Debug configuration for PBXNativeTarget "ChronosWatch" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X98D4GJJ83;
+				INFOPLIST_KEY_CFBundleDisplayName = ChronosWatch;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wg.local.ChronosWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AC612E9E30B3D0AB001FE56F /* Release configuration for PBXNativeTarget "ChronosWatch" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X98D4GJJ83;
+				INFOPLIST_KEY_CFBundleDisplayName = ChronosWatch;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wg.local.ChronosWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AC612EB830B40855001FE56F /* Debug configuration for PBXNativeTarget "ChronosComplicationExtension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X98D4GJJ83;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChronosComplication/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ChronosComplication;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wg.local.ChronosWatch.watchkitapp.ChronosComplication;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		AC612EB930B40855001FE56F /* Release configuration for PBXNativeTarget "ChronosComplicationExtension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X98D4GJJ83;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChronosComplication/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ChronosComplication;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wg.local.ChronosWatch.watchkitapp.ChronosComplication;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -335,6 +838,38 @@
 			buildConfigurations = (
 				AC612E6530B380FD001FE56F /* Debug configuration for PBXNativeTarget "Chronos" */,
 				AC612E6630B380FD001FE56F /* Release configuration for PBXNativeTarget "Chronos" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		AC612E8130B3B6CD001FE56F /* Build configuration list for PBXNativeTarget "ChronosWatchExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC612E8230B3B6CD001FE56F /* Debug configuration for PBXNativeTarget "ChronosWatchExtension" */,
+				AC612E8330B3B6CD001FE56F /* Release configuration for PBXNativeTarget "ChronosWatchExtension" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		AC612E9830B3D0AB001FE56F /* Build configuration list for PBXNativeTarget "ChronosWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC612E9930B3D0AB001FE56F /* Debug configuration for PBXNativeTarget "ChronosWatch Watch App" */,
+				AC612E9A30B3D0AB001FE56F /* Release configuration for PBXNativeTarget "ChronosWatch Watch App" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		AC612E9C30B3D0AB001FE56F /* Build configuration list for PBXNativeTarget "ChronosWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC612E9D30B3D0AB001FE56F /* Debug configuration for PBXNativeTarget "ChronosWatch" */,
+				AC612E9E30B3D0AB001FE56F /* Release configuration for PBXNativeTarget "ChronosWatch" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		AC612EB730B40855001FE56F /* Build configuration list for PBXNativeTarget "ChronosComplicationExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC612EB830B40855001FE56F /* Debug configuration for PBXNativeTarget "ChronosComplicationExtension" */,
+				AC612EB930B40855001FE56F /* Release configuration for PBXNativeTarget "ChronosComplicationExtension" */,
 			);
 			defaultConfigurationName = Release;
 		};
