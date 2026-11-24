@@ -5,6 +5,10 @@ import WatchKit
 struct ContentView: View {
     @State private var now = Date()
     @State private var crownOffsetCentidays: Double = 0.0
+    @State private var selectedTab = 0
+    @Environment(\.scenePhase) private var scenePhase
+
+    
     @FocusState private var isCrownFocused: Bool
     
     @AppStorage("birthMonth") private var birthMonth: Int = 5
@@ -69,7 +73,7 @@ struct ContentView: View {
                         .font(.system(size: 8, weight: .bold, design: .rounded))
                         .foregroundStyle(crownOffsetCentidays == 0 ? hPlanet.color : .yellow)
                 }
-            }
+            }.tag(0)
             .frame(width: bounds.width, height: bounds.height)
             .ignoresSafeArea()
             .focusable()
@@ -124,23 +128,64 @@ struct ContentView: View {
                         .font(.system(size: 10, weight: .bold))
                         .foregroundStyle(.secondary)
                     
-                    HStack {
-                        Picker("Month", selection: $birthMonth) {
-                            ForEach(1...12, id: \.self) { m in
-                                Text(Calendar.current.shortMonthSymbols[m - 1]).tag(m)
+                    HStack(spacing: 8) {
+                        // Month Stepper
+                        HStack(spacing: 4) {
+                            Button {
+                                birthMonth = birthMonth > 1 ? birthMonth - 1 : 12
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .font(.caption2.bold())
                             }
+                            .buttonStyle(.plain)
+                            
+                            Text(Calendar.current.shortMonthSymbols[birthMonth - 1])
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                                .frame(minWidth: 32)
+                            
+                            Button {
+                                birthMonth = birthMonth < 12 ? birthMonth + 1 : 1
+                            } label: {
+                                Image(systemName: "chevron.right")
+                                    .font(.caption2.bold())
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .frame(height: 55)
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 6)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.12)))
                         
-                        Picker("Day", selection: $birthDay) {
-                            ForEach(1...31, id: \.self) { d in
-                                Text("\(d)").tag(d)
+                        // Day Stepper
+                        HStack(spacing: 4) {
+                            Button {
+                                birthDay = birthDay > 1 ? birthDay - 1 : 31
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .font(.caption2.bold())
                             }
+                            .buttonStyle(.plain)
+                            
+                            Text("\(birthDay)")
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                                .monospacedDigit()
+                                .frame(minWidth: 20)
+                            
+                            Button {
+                                birthDay = birthDay < 31 ? birthDay + 1 : 1
+                            } label: {
+                                Image(systemName: "chevron.right")
+                                    .font(.caption2.bold())
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .frame(height: 55)
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 6)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(.white.opacity(0.12)))
                     }
+
                 }
                 .padding(.horizontal, 6)
+                .tag(1)
             }
         }
         .tabViewStyle(.verticalPage)
