@@ -1,0 +1,7 @@
+Your next planned feature on the Chronos roadmap is App Group Sync (group.com.wg.local.chronos), which shares your birthMonth, birthDay, and custom anchorTimestamp automatically across your iPhone, Apple Watch, and Watch Face Complications (WidgetCenter.shared.reloadAllTimelines()) so changing your cycle anchor on one device updates every surface in real time.
+Right behind that in your v2 milestone queue:
+• Interactive Deciday Time-Segmenting: Tapping any of the 10 deciday markers (00–90) on iPhone or Mac to assign a focus intention for that 2.4-hour block and append it directly to today's Obsidian note (YYYY-MM-DD.md).
+• Quick Voice / Scribble Capture on Apple Watch: A one-tap logger on Page 2 of ChronosWatch to dictate a dual-timestamped Markdown bullet straight into iCloud Drive for Obsidian.
+Would you like to wire up App Group Sync across iPhone, Watch, and your Watch Face Complication now, or jump straight into Interactive Deciday Time-Segmenting?
+
+
